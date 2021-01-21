@@ -1,6 +1,6 @@
 var http = require('http');
-var fs = require('fs');
 var path = require('path');
+var CachedFs = require('cachedfs'), fs = new CachedFs();
 
 http.createServer(function (request, response) {
     console.log('request ', request.url);
