@@ -1,3 +1,4 @@
+require('dotenv').config()
 var http = require('http');
 var path = require('path');
 var CachedFs = require('cachedfs'), fs = new CachedFs();
@@ -23,6 +24,7 @@ http.createServer(function (request, response) {
         '.wav': 'audio/wav',
         '.mp4': 'video/mp4',
         '.woff': 'application/font-woff',
+        '.woff2': 'application/font-woff2',
         '.ttf': 'application/font-ttf',
         '.eot': 'application/vnd.ms-fontobject',
         '.otf': 'application/font-otf',
@@ -50,5 +52,4 @@ http.createServer(function (request, response) {
         }
     });
 
-}).listen(8125);
-console.log('Server running at http://127.0.0.1:8125/');
+}).listen(process.env.SRV_PORT);
