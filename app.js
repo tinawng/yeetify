@@ -6,9 +6,9 @@ var CachedFs = require('cachedfs'), fs = new CachedFs();
 http.createServer(function (request, response) {
     console.log('request ', request.url);
 
-    var filePath = '.' + request.url;
-    if (filePath == './') {
-        filePath = './index.html';
+    var filePath = request.url;
+    if (filePath == '/') {
+        filePath = '/index.html';
     }
 
     var extname = String(path.extname(filePath)).toLowerCase();
@@ -33,7 +33,7 @@ http.createServer(function (request, response) {
 
     var contentType = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile(filePath, function (error, content) {
+    fs.readFile('./dist' + filePath, function (error, content) {
         if (error) {
             if (error.code == 'ENOENT') {
                 fs.readFile('./404.html', function (error, content) {
