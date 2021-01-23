@@ -6,7 +6,8 @@ var CachedFs = require('cachedfs'), cfs = new CachedFs();
 
 http2.createSecureServer({
     key: fs.readFileSync(process.env.CERT_PATH + 'privkey.pem'),
-    cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem')
+    cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem'),
+    allowHTTP1: true
 }, function (request, response) {
     console.log('request ', request.url);
 
