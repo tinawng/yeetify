@@ -1,0 +1,6 @@
+*
+!.gitignore
+!.env.sample
+!app.js
+!package.json
+!package-lock.json
