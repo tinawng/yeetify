@@ -1,9 +1,13 @@
 require('dotenv').config()
-var http = require('http');
+var http2 = require('http2');
 var path = require('path');
-var CachedFs = require('cachedfs'), fs = new CachedFs();
+var fs = require('fs');
+var CachedFs = require('cachedfs'), cfs = new CachedFs();
 
-http.createServer(function (request, response) {
+http2.createSecureServer({
+    key: fs.readFileSync(process.env.CERT_PATH + 'privkey.pem'),
+    cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem')
+}, function (request, response) {
     console.log('request ', request.url);
 
     var filePath = request.url;
@@ -33,10 +37,10 @@ http.createServer(function (request, response) {
 
     var contentType = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile('./dist' + filePath, function (error, content) {
+    cfs.readFile('./dist' + filePath, function (error, content) {
         if (error) {
             if (error.code == 'ENOENT') {
-                fs.readFile('./404.html', function (error, content) {
+                cfs.readFile('./404.html', function (error, content) {
                     response.writeHead(404, { 'Content-Type': 'text/html' });
                     response.end(content, 'utf-8');
                 });
