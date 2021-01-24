@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compress": "find dist/ -type f -name '*.html' -exec gzip -k {} ';' ; find dist/ -type f -name '*.html' -exec brotli --best {} ';' ; find dist/ -type f -name '*.js' -exec gzip -k {} ';' ; find dist/ -type f -name '*.js' -exec brotli --best {} {} ';'"
   },
   "repository": {
     "type": "git",
