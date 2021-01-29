@@ -47,7 +47,7 @@ http2.createSecureServer({
         }
     }
 
-    if (contentType.includes('text') || contentType.includes('image') || contentType.includes('application'))
+    if (contentType != 'text/html' && (contentType.includes('text') || contentType.includes('image') || contentType.includes('application')))
         response.setHeader('Cache-Control', 'public, max-age=604800, immutable');
 
     cfs.readFile('./dist' + filePath + encoding, function (error, content) {
