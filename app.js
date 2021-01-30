@@ -11,6 +11,7 @@ const mimeTypes = {
     '.json': 'application/json',
     '.png': 'image/png',
     '.jpg': 'image/jpg',
+    '.webp': 'image/webp',
     '.gif': 'image/gif',
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
