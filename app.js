@@ -29,13 +29,17 @@ http2.createSecureServer({
     cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem'),
     allowHTTP1: true
 }, function (request, response) {
+    // 🔊 Log requested route
     console.log('request ', request.url);
 
+    // ♻️ Clarify implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
 
+    // 📝 Set media type
     const extname = String(path.extname(filePath)).toLowerCase();
     const contentType = mimeTypes[extname] || 'application/octet-stream';
 
+    // 📦 Serve compressed file if available
     var encoding = ''
     if (['.html', '.js', '.css'].includes(extname)) {
         if (request.headers['accept-encoding'].includes('br')) {
@@ -48,9 +52,11 @@ http2.createSecureServer({
         }
     }
 
+    // 🗃️ Set cache policy
     if (contentType != 'text/html' && (contentType.includes('text') || contentType.includes('image') || contentType.includes('application')))
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
+    // 🚀 Read and serve file
     cfs.readFile('./dist' + filePath + encoding, function (error, content) {
         if (error) {
             if (error.code == 'ENOENT') {
