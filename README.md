@@ -10,7 +10,7 @@
 
 💨 ***Yeetify*** is a tiny tiny & easy to use static web server. Just dump your static files into `./dist` folder and you're ready to go.
 
-Built with a minimal (and naive ?) approach, the least dependencies and <100 lines of code.
+Built with a minimal (and naive ?) approach, the least dependencies and <100 lines of code using ***raw Nodejs***.
 
 Works well with Nuxt.js static generation, Gridsome, etc... in addition to `compress` script (see below) if file compression is not included in your build process.
 
@@ -20,15 +20,17 @@ Works well with Nuxt.js static generation, Gridsome, etc... in addition to `comp
 - 📦 Brotli compression support (with GZip fallback)
 - ♻️ Optimised cache policy for compatible files
 - 🗃️ Server level file cache
+- 🔊 Asynchronous logging for minimal impact on performance 
 
 # Dependencies
 
 - 🔧 *[dotenv](https://www.npmjs.com/package/dotenv)*
 - ⚡️ *[cachedfs](https://www.npmjs.com/package/cachedfs)*
+- 🗃️ *[pino](https://www.npmjs.com/package/pino)*
 
 # Next
 
-- Async Log *(using Pino?)*
+- ~~Async logging *(using Pino?)*~~
 
 # Use Process
 
@@ -43,4 +45,7 @@ $ npm run compress
 $ pm2 start app.js --name "instance_name"
 # run server with node
 $ node app.js
+
+# run http server (not recommended)
+$ node app-legacy.js
 ```
