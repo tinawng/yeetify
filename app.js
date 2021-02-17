@@ -3,7 +3,7 @@ const http2 = require('http2');
 const path = require('path');
 const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
-const pino = require('pino'), logger = pino(pino.destination({ dest: './logs/logs', minLength: 4096, sync: false }));
+const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs', minLength: 4096, sync: false }));
 
 // 🔊 Set logging level
 logger.level = 'trace';

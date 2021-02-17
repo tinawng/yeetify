@@ -2,7 +2,7 @@ require('dotenv').config()
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
-const pino = require('pino'), logger = pino(pino.destination({ dest: './logs/logs-legacy', minLength: 4096, sync: false }));
+const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs-legacy', minLength: 4096, sync: false }));
 
 // 🔊 Set logging level
 logger.level = 'trace';
