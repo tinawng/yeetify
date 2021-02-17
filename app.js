@@ -3,13 +3,13 @@ const http2 = require('http2');
 const path = require('path');
 const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
-const pino = require('pino'), logger = pino(pino.destination({ dest: './logs', minLength: 4096, sync: false }));
+const pino = require('pino'), logger = pino(pino.destination({ dest: './logs/logs', minLength: 4096, sync: false }));
 
-// 🔊 set logging level
+// 🔊 Set logging level
 logger.level = 'trace';
-// 🚽 asynchronously flush every 3 seconds to keep the buffer empty in periods of low activity
+// 🚽 Asynchronously flush every 3 seconds to keep the buffer empty in periods of low activity
 setInterval(() => { logger.flush() }, 3000).unref();
-// 🥅 catch all the ways node might exit
+// 🥅 Catch all the ways node might exit
 const handler = pino.final(logger, (err, finalLogger, evt) => {
     finalLogger.info(`${evt} caught`)
     if (err) finalLogger.error(err, 'error caused exit')

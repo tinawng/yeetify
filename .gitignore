@@ -3,5 +3,7 @@
 !.env.sample
 !app.js
 !app-legacy.js
+!/logs/
+!/logs/README.md
 !package.json
 !package-lock.json
