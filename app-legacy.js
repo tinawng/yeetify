@@ -32,12 +32,13 @@ var mimeTypes = {
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
     '.mp4': 'video/mp4',
-    '.woff': 'application/font-woff',
-    '.ttf': 'application/font-ttf',
-    '.eot': 'application/vnd.ms-fontobject',
-    '.otf': 'application/font-otf',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf',
     '.wasm': 'application/wasm'
 };
+
+
 
 http.createServer(function (request, response) {
     // 🔊 Log request
@@ -59,6 +60,12 @@ http.createServer(function (request, response) {
                     response.end(content, 'utf-8');
                 });
             }
+            else if (error.code == 'EISDIR') {
+                fs.readFile('./dist' + filePath + '/index.html', function (error, content) {
+                    response.writeHead(200, { 'Content-Type': 'text/html' });
+                    response.end(content, 'utf-8');
+                });
+            }
             else {
                 response.writeHead(500);
                 response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
@@ -69,5 +76,4 @@ http.createServer(function (request, response) {
             response.end(content, 'utf-8');
         }
     });
-
 }).listen(process.env.SRV_PORT);

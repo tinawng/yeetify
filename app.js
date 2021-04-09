@@ -29,16 +29,13 @@ const mimeTypes = {
     '.json': 'application/json',
     '.png': 'image/png',
     '.jpg': 'image/jpg',
-    '.webp': 'image/webp',
     '.gif': 'image/gif',
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
     '.mp4': 'video/mp4',
-    '.woff': 'application/font-woff',
-    '.woff2': 'application/font-woff2',
-    '.ttf': 'application/font-ttf',
-    '.eot': 'application/vnd.ms-fontobject',
-    '.otf': 'application/font-otf',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf',
     '.wasm': 'application/wasm'
 };
 
@@ -83,6 +80,12 @@ http2.createSecureServer({
                     response.end(content, 'utf-8');
                 });
             }
+            else if (error.code == 'EISDIR') {
+                fs.readFile('./dist' + filePath + '/index.html', function (error, content) {
+                    response.writeHead(200, { 'Content-Type': 'text/html' });
+                    response.end(content, 'utf-8');
+                });
+            }
             else {
                 response.writeHead(500);
                 response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
@@ -93,5 +96,4 @@ http2.createSecureServer({
             response.end(content, 'utf-8');
         }
     });
-
 }).listen(process.env.SRV_PORT);
