@@ -30,7 +30,7 @@ Works well with Nuxt.js static generation, Gridsome, etc... in addition to `comp
 
 # Next
 
-- ~~Async logging *(using Pino?)*~~
+- [x] Async logging *(using Pino?)*
 
 # Use Process
 
