@@ -1,6 +1,7 @@
 require('dotenv').config()
 var http = require('http');
-var fs = require('fs');
+const fs = require('fs');
+const CachedFs = require('cachedfs'), cfs = new CachedFs();
 var path = require('path');
 const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs-legacy', minLength: 4096, sync: false }));
 
@@ -52,16 +53,16 @@ http.createServer(function (request, response) {
     var contentType = mimeTypes[extname] || 'application/octet-stream';
 
     // 🚀 Read and serve file
-    fs.readFile('./dist' + filePath, function (error, content) {
+    cfs.readFile('./dist' + filePath, function (error, content) {
         if (error) {
             if (error.code == 'ENOENT') {
-                fs.readFile('./404.html', function (error, content) {
+                cfs.readFile('./404.html', function (error, content) {
                     response.writeHead(404, { 'Content-Type': 'text/html' });
                     response.end(content, 'utf-8');
                 });
             }
             else if (error.code == 'EISDIR') {
-                fs.readFile('./dist' + filePath + '/index.html', function (error, content) {
+                cfs.readFile('./dist' + filePath + '/index.html', function (error, content) {
                     response.writeHead(200, { 'Content-Type': 'text/html' });
                     response.end(content, 'utf-8');
                 });
