@@ -45,7 +45,7 @@ http2.createSecureServer({
     // 📦 Serve compressed file if available
     var encoding = ''
     if (['.html', '.js', '.css'].includes(extname)) {
-        if (request.headers['accept-encoding'].includes('br')) {
+        if (request.headers['accept-encoding']?.includes('br')) {
             encoding = '.br'
             response.setHeader('Content-Encoding', 'br')
         }
