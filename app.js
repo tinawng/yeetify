@@ -9,18 +9,6 @@ const pino = require('pino'), logger = pino(pino.destination({ dest: process.env
 logger.level = 'trace';
 // 🚽 Asynchronously flush every 3 seconds to keep the buffer empty in periods of low activity
 setInterval(() => { logger.flush() }, 3000).unref();
-// 🥅 Catch all the ways node might exit
-const handler = pino.final(logger, (err, finalLogger, evt) => {
-    finalLogger.info(`${evt} caught`)
-    if (err) finalLogger.error(err, 'error caused exit')
-    process.exit(err ? 1 : 0)
-});
-process.on('beforeExit', () => handler(null, 'beforeExit'));
-process.on('exit', () => handler(null, 'exit'));
-process.on('uncaughtException', (err) => handler(err, 'uncaughtException'));
-process.on('SIGINT', () => handler(null, 'SIGINT'));
-process.on('SIGQUIT', () => handler(null, 'SIGQUIT'));
-process.on('SIGTERM', () => handler(null, 'SIGTERM'));
 
 const mimeTypes = {
     '.html': 'text/html',
