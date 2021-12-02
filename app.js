@@ -38,20 +38,22 @@ http2.createSecureServer({
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
 
-    // 📝 Set media type
-    const extname = String(path.extname(filePath)).toLowerCase();
+    // 📝 Set file type
+    var extname = String(path.extname(filePath)).toLowerCase();
+    if (process.env.SPA && !extname) extname = '.html';
     const contentType = mimeTypes[extname] || 'application/octet-stream';
+    if (process.env.SPA && extname == '.html') filePath = '/index.html';
 
-    // 📦 Serve compressed file if available
-    var encoding = ''
+    // 📦 Serve compressed file if possible
+    var encoding = '';
     if (['.html', '.js', '.css'].includes(extname)) {
         if (request.headers['accept-encoding']?.includes('br')) {
-            encoding = '.br'
-            response.setHeader('Content-Encoding', 'br')
+            encoding = '.br';
+            response.setHeader('Content-Encoding', 'br');
         }
         else {
-            encoding = '.gz'
-            response.setHeader('Content-Encoding', 'gzip')
+            encoding = '.gz';
+            response.setHeader('Content-Encoding', 'gzip');
         }
     }
 
