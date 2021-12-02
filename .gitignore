@@ -6,4 +6,3 @@
 !/logs/
 !/logs/README.md
 !package.json
-!yarn.lock
