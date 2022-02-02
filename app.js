@@ -32,8 +32,12 @@ http2.createSecureServer({
     cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem'),
     allowHTTP1: true
 }, function (request, response) {
+    // 🔥 Sanitize 
+    request.url = encodeURI(request.url);
+    request.headers = sanitizeHeaders(request.headers);
+
     // 🔊 Log request
-    logger.trace(request);
+    logger.trace({ req: { method: request.method, url: request.url, headers: request.headers } });
 
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
@@ -87,3 +91,9 @@ http2.createSecureServer({
         }
     });
 }).listen(process.env.SRV_PORT);
+
+function sanitizeHeaders(headers) {
+    for (const header in headers)
+        headers[header] = headers[header].replace(/[^a-zA-Z0-9"#$%&'()*+,-./:;=?@[\]_{}]/g, '');
+    return headers
+}
