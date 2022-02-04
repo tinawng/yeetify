@@ -94,6 +94,6 @@ http2.createSecureServer({
 
 function sanitizeHeaders(headers) {
     for (const header in headers)
-        headers[header] = headers[header].replace(/[^a-zA-Z0-9"#$%&'()*+,-./:;=?@[\]_{}]/g, '');
+        headers[header] = headers[header].replace(/[^a-zA-Z0-9"#$%&'()*+,-./:;=?@[\]_ ]/g, '');
     return headers
 }
