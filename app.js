@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
 const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs', minLength: 4096, sync: false }));
+const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { secret: process.env.LOG_API_KEY }, responseType: 'json', resolveBodyOnly: true });
 
 // 🔊 Set logging level
 logger.level = 'trace';
@@ -21,9 +22,7 @@ const mimeTypes = {
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
     '.mp4': 'video/mp4',
-    '.woff': 'font/woff',
     '.woff2': 'font/woff2',
-    '.ttf': 'font/ttf',
     '.wasm': 'application/wasm'
 };
 
@@ -38,6 +37,7 @@ http2.createSecureServer({
 
     // 🔊 Log request
     logger.trace({ req: { method: request.method, url: request.url, headers: request.headers } });
+    log_api.post('http_req', { json: { service: request.headers.host, client: request.headers['x-forwarded-for'].split(',')[0], request: { method: request.method, url: request.url, headers: request.headers } } })
 
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
