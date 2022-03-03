@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
 const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs', minLength: 4096, sync: false }));
-const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { secret: process.env.LOG_API_KEY }, responseType: 'json', resolveBodyOnly: true });
+const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { 'X-API-KEY': process.env.LOG_API_KEY }, responseType: 'json', resolveBodyOnly: true });
 
 // 🔊 Set logging level
 logger.level = 'trace';
