@@ -37,7 +37,7 @@ http2.createSecureServer({
 
     // 🔊 Log request
     logger.trace({ req: { method: request.method, url: request.url, headers: request.headers } });
-    log_api.post('http_req', { json: { service: request.headers.host, client: request.headers['x-forwarded-for'].split(',')[0], request: { method: request.method, url: request.url, headers: request.headers } } })
+    log_api.post('http_req', { json: { service: request.headers.host, client: request.headers['x-forwarded-for'], request: { method: request.method, url: request.url, headers: request.headers } } })
 
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
