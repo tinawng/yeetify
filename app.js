@@ -62,7 +62,7 @@ http2.createSecureServer({
     }
 
     // 🗃️ Set cache policy
-    if (contentType != 'text/html' && (contentType.includes('text') || contentType.includes('application') || contentType.includes('image') || contentType.includes('font')))
+    if (contentType != 'text/html')
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
     // 🚀 Read and serve file
