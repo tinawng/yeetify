@@ -9,20 +9,8 @@ const pino = require('pino'), logger = pino(pino.destination({ dest: process.env
 logger.level = 'trace';
 // 🚽 Asynchronously flush every 3 seconds to keep the buffer empty in periods of low activity
 setInterval(() => { logger.flush() }, 3000).unref();
-// 🥅 Catch all the ways node might exit
-const handler = pino.final(logger, (err, finalLogger, evt) => {
-    finalLogger.info(`${evt} caught`)
-    if (err) finalLogger.error(err, 'error caused exit')
-    process.exit(err ? 1 : 0)
-})
-process.on('beforeExit', () => handler(null, 'beforeExit'))
-process.on('exit', () => handler(null, 'exit'))
-process.on('uncaughtException', (err) => handler(err, 'uncaughtException'))
-process.on('SIGINT', () => handler(null, 'SIGINT'))
-process.on('SIGQUIT', () => handler(null, 'SIGQUIT'))
-process.on('SIGTERM', () => handler(null, 'SIGTERM'))
 
-var mimeTypes = {
+const mimeTypes = {
     '.html': 'text/html',
     '.js': 'text/javascript',
     '.css': 'text/css',
@@ -33,24 +21,27 @@ var mimeTypes = {
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
     '.mp4': 'video/mp4',
-    '.woff': 'font/woff',
     '.woff2': 'font/woff2',
-    '.ttf': 'font/ttf',
     '.wasm': 'application/wasm'
 };
 
 
-
 http.createServer(function (request, response) {
+    // 🔥 Sanitize 
+    request.url = encodeURI(request.url);
+    request.headers = sanitizeHeaders(request.headers);
+    
     // 🔊 Log request
     logger.trace(request)
 
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
 
-    // 📝 Set media type
+    // 📝 Set file type
     var extname = String(path.extname(filePath)).toLowerCase();
-    var contentType = mimeTypes[extname] || 'application/octet-stream';
+    if (process.env.SPA && !extname) extname = '.html';
+    const contentType = mimeTypes[extname] || 'application/octet-stream';
+    if (process.env.SPA && extname == '.html') filePath = '/index.html';
 
     // 🚀 Read and serve file
     cfs.readFile('./dist' + filePath, function (error, content) {
@@ -78,3 +69,9 @@ http.createServer(function (request, response) {
         }
     });
 }).listen(process.env.SRV_PORT);
+
+function sanitizeHeaders(headers) {
+    for (const header in headers)
+        headers[header] = headers[header].replace(/[^a-zA-Z0-9"#$%&'()*+,-./:;=?@[\]_ ]/g, '');
+    return headers
+}
