@@ -42,6 +42,8 @@ http.createServer(function (request, response) {
     if (process.env.SPA && !extname) extname = '.html';
     const contentType = mimeTypes[extname] || 'application/octet-stream';
     if (process.env.SPA && extname == '.html') filePath = '/index.html';
+    
+    if (process.env.OPEN_CORS) response.setHeader('Access-Control-Allow-Origin', '*')
 
     // 🚀 Read and serve file
     cfs.readFile('./dist' + filePath, function (error, content) {
