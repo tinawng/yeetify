@@ -3,7 +3,7 @@ const http2 = require('http2');
 const path = require('path');
 const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
-const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { 'X-API-KEY': process.env.LOG_API_KEY }, responseType: 'json', resolveBodyOnly: true });
+const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { 'X-API-KEY': process.env.LOG_API_KEY } });
 
 const mimeTypes = {
     '.html': 'text/html',

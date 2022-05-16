@@ -1,14 +1,6 @@
 require('dotenv').config()
 var http = require('http');
-const fs = require('fs');
 const CachedFs = require('cachedfs'), cfs = new CachedFs();
-var path = require('path');
-const pino = require('pino'), logger = pino(pino.destination({ dest: process.env.LOG_PATH + 'logs-legacy', minLength: 4096, sync: false }));
-
-// 🔊 Set logging level
-logger.level = 'trace';
-// 🚽 Asynchronously flush every 3 seconds to keep the buffer empty in periods of low activity
-setInterval(() => { logger.flush() }, 3000).unref();
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -30,9 +22,6 @@ http.createServer(function (request, response) {
     // 🔥 Sanitize 
     request.url = encodeURI(request.url);
     request.headers = sanitizeHeaders(request.headers);
-    
-    // 🔊 Log request
-    logger.trace(request)
 
     // ♻️ Handle implicit index.html request
     var filePath = request.url == '/' ? '/index.html' : request.url;
@@ -43,7 +32,7 @@ http.createServer(function (request, response) {
     const contentType = mimeTypes[extname] || 'application/octet-stream';
     if (process.env.SPA && extname == '.html') filePath = '/index.html';
     
-    if (process.env.OPEN_CORS) response.setHeader('Access-Control-Allow-Origin', '*')
+    if (process.env.LEGACY_OPEN_CORS) response.setHeader('Access-Control-Allow-Origin', '*')
 
     // 🚀 Read and serve file
     cfs.readFile('./dist' + filePath, function (error, content) {
