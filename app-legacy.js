@@ -1,7 +1,9 @@
-require('dotenv').config()
-var http = require('http');
-const CachedFs = require('cachedfs'), cfs = new CachedFs();
+import "dotenv/config";
+import http from "node:http";
+import path from  "path";
+import CachedFs from "cachedfs";
 
+const cfs = new CachedFs();
 const mimeTypes = {
     '.html': 'text/html',
     '.js': 'text/javascript',
@@ -16,7 +18,6 @@ const mimeTypes = {
     '.woff2': 'font/woff2',
     '.wasm': 'application/wasm'
 };
-
 
 http.createServer(function (request, response) {
     // 🔥 Sanitize 

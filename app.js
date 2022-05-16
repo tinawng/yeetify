@@ -1,10 +1,12 @@
-require('dotenv').config()
-const http2 = require('http2');
-const path = require('path');
-const fs = require('fs');
-const CachedFs = require('cachedfs'), cfs = new CachedFs();
-const got = require('got'), log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { 'X-API-KEY': process.env.LOG_API_KEY } });
+import "dotenv/config";
+import http2 from "node:http2";
+import path from  "path";
+import fs from "fs";
+import CachedFs from "cachedfs";
+import got from "got";
 
+const cfs = new CachedFs();
+const log_api = got.extend({ prefixUrl: "https://tanabata.tina.cafe/logs/", headers: { 'X-API-KEY': process.env.LOG_API_KEY } });
 const mimeTypes = {
     '.html': 'text/html',
     '.js': 'text/javascript',
@@ -25,7 +27,7 @@ http2.createSecureServer({
     cert: fs.readFileSync(process.env.CERT_PATH + 'cert.pem'),
     allowHTTP1: true
 }, function (request, response) {
-    // 🔥 Sanitize 
+    // 🔥 Sanitize
     request.url = encodeURI(request.url);
     request.headers = sanitizeHeaders(request.headers);
 

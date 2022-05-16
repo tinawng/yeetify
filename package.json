@@ -1,8 +1,9 @@
 {
   "name": "yeetify",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "compress": "find dist/ -type f -name '*.html' -exec gzip -k {} ';' ; find dist/ -type f -name '*.html' -exec brotli --best {} ';' ; find dist/ -type f -name '*.js' -exec gzip -k {} ';' ; find dist/ -type f -name '*.js' -exec brotli --best {} {} ';' ; find dist/ -type f -name '*.css' -exec gzip -k {} ';' ; find dist/ -type f -name '*.css' -exec brotli --best {} {} ';'"
   },
@@ -19,7 +20,7 @@
   "homepage": "https://github.com/tinawng/yeetify#readme",
   "dependencies": {
     "cachedfs": "^0.3.3",
-    "dotenv": "latest",
-    "got": "11.8.3"
+    "dotenv": "^16.0.1",
+    "got": "^12.0.4"
   }
 }
