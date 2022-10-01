@@ -12,6 +12,7 @@ const mimeTypes = {
     '.js': 'text/javascript',
     '.css': 'text/css',
     '.json': 'application/json',
+    '.webmanifest': 'application/manifest+json',
     '.png': 'image/png',
     '.jpg': 'image/jpg',
     '.gif': 'image/gif',
@@ -57,7 +58,7 @@ http2.createSecureServer({
     }
 
     // 🗃️ Set cache policy
-    if (contentType != 'text/html')
+    if (contentType !== 'text/html' && contentType !== 'application/manifest+json' && !filePath.endsWith('sw.js'))
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
     // 🚀 Read and serve file
