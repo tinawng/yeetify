@@ -12,27 +12,20 @@
 
 Built with a minimal (and naive ?) approach, the least dependencies and <100 lines of code using ***raw Nodejs***.
 
-Works well with Nuxt.js static generation, Gridsome, etc... in addition to `compress` script (see below) if file compression is not included in your build process.
+Works well with Vite, Nuxt.js static generation, Gridsome, etc... in addition to `compress` script (see below) if file compression is not included in your build process.
 
 # Features
 
 - ⚡️ HTTP2 support (comes with 🔒 HTTPS)
-- 📦 Brotli compression support (with GZip fallback)
-- ♻️ Optimised cache policy for compatible files
-- 🗃️ Server level file cache
-- 🔊 Asynchronous logging for minimal impact on performance 
+- 📦 Brotli & GZip compression support
+- ♻️ Optimised cache policy
+- 🗃️ In-memory files cache
 
 # Dependencies
 
 - 🔧 *[dotenv](https://www.npmjs.com/package/dotenv)*
-- ⚡️ *[cachedfs](https://www.npmjs.com/package/cachedfs)*
-- 🗃️ *[pino](https://www.npmjs.com/package/pino)*
 
-# Next
-
-- [x] Async logging *(using Pino?)*
-
-# Use Process
+# Let's yeet
 
 ```bash
 # install dependencies
@@ -45,7 +38,4 @@ $ npm run compress
 $ pm2 start app.js --name "instance_name"
 # run server with node
 $ node app.js
-
-# run http server (not recommended)
-$ node app-legacy.js
 ```
