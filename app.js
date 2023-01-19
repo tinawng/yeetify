@@ -33,7 +33,8 @@ const mime_types = new Map([
     ['.wav', 'audio/wav'],
     ['.mp4', 'video/mp4'],
     ['.woff2', 'font/woff2'],
-    ['.wasm', 'application/wasm']
+    ['.wasm', 'application/wasm'],
+    ['.md', 'text/markdown']
 ])
 
 function handler(request, response) {
@@ -74,6 +75,7 @@ function handler(request, response) {
     // 🍱 Set cache policy
     if (content_type !== 'text/html'
         && content_type !== 'application/manifest+json'
+        && content_type !== 'text/markdown'
         && !file_path.endsWith('sw.js'))
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
 
