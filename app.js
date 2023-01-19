@@ -55,7 +55,7 @@ function handler(request, response) {
     response.setHeader('Content-Type', content_type)
 
     // 🔀 Reroute for SPA
-    if (process.env.SPA && content_type === 'text/html') file_path = '/index.html'
+    if (process.env.SPA === 'true' && content_type === 'text/html') file_path = '/index.html'
 
 
     // 📦 Serve compressed file if possible
