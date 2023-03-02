@@ -44,7 +44,8 @@ const mime_types = new Map([
     ['.mp4', 'video/mp4'],
     ['.woff2', 'font/woff2'],
     ['.wasm', 'application/wasm'],
-    ['.md', 'text/markdown']
+    ['.md', 'text/markdown'],
+    ['.txt', 'text/plain']
 ])
 
 function handler(request, response) {
