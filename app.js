@@ -73,11 +73,11 @@ function handler(request, response) {
     // 📦 Serve compressed file if possible
     let encoding = ''
     if (['.html', '.js', '.css'].includes(ext_name)) {
-        if (request_accept_encoding?.includes('br')) {
+        if (request_accept_encoding?.includes('br') && cache.has(file_path + '.br')) {
             encoding = '.br'
             response.setHeader('Content-Encoding', 'br')
         }
-        else if (request_accept_encoding?.includes('gzip')) {
+        else if (request_accept_encoding?.includes('gzip') && cache.has(file_path + '.gz')) {
             encoding = '.gz'
             response.setHeader('Content-Encoding', 'gzip')
         }
