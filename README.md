@@ -1,6 +1,6 @@
 
 <p align="center">
-    <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/microsoft/209/dash-symbol_1f4a8.png"/>
+    <img src="https://em-content.zobj.net/thumbs/160/apple/325/dashing-away_1f4a8.png"/>
     <br/>
     <br/>
     <img src="https://img.shields.io/badge/node.js--339933?style=for-the-badge&logo=node.js"/>
