@@ -7,20 +7,24 @@ import { readFileSync } from 'node:fs'
 import { extname } from "path"
 import { StaticPool } from "node-worker-threads-pool"
 
-// 🗝️ Get API token
-const { token: log_api_token } = await (await fetch(process.env.LOG_API_URL + "/api/collections/users/auth-with-password", { headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify({ identity: 'yeetify', password: process.env.LOG_API_PASSWORD }) })).json() /**💡 All api responses are expected to return json */
+const log_request = process.env.NODE_NAME && process.env.LOG_API_URL && process.env.LOG_API_PASSWORD
+let log_api_token, log_worker_pool
+if (log_request) {
+    // 🗝️ Get API token
+    ({ token: log_api_token } = await (await fetch(process.env.LOG_API_URL + "/api/collections/users/auth-with-password", { headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify({ identity: 'yeetify', password: process.env.LOG_API_PASSWORD }) })).json())
 
-// 🐜 Create workers pool
-const pool = new StaticPool({
-    size: 3,
-    task: async ({ log_api_token, payload }) => {
-        await fetch(process.env.LOG_API_URL + "/api/collections/records/records", {
-            headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json', 'Authorization': log_api_token },
-            method: 'POST',
-            body: JSON.stringify(payload)
-        })
-    }
-});
+    // 🐜 Create workers pool
+    log_worker_pool = new StaticPool({
+        size: 3,
+        task: async ({ log_api_token, payload }) => {
+            await fetch(process.env.LOG_API_URL + "/api/collections/records/records", {
+                headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json', 'Authorization': log_api_token },
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+        }
+    });
+}
 
 // 🗃️ Load everything in memory
 const cache = new Map()
@@ -104,17 +108,13 @@ function handler(request, response) {
     }
 
     // 📃 Log request
-    pool.exec({
+    if (log_request) log_worker_pool.exec({
         log_api_token,
         payload: {
             service: request.headers.host,
             client: request.headers['x-forwarded-for'] || '192.168.1.254',
-            request_method: request.method,
-            request_url: request.url,
-            request_agent: request.headers['user-agent'],
-            response_code: resp_code,
-            response_file: file_path + encoding,
-            response_mime: content_type
+            request_method: request.method, request_url: request.url, request_agent: request.headers['user-agent'],
+            response_code: resp_code, response_file: file_path + encoding, response_mime: content_type
         }
     })
 }
