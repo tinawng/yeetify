@@ -5,18 +5,32 @@ import { walk } from "@root/walk"
 import { readFile } from 'node:fs/promises'
 import { readFileSync } from 'node:fs'
 import { extname } from "path"
+import { StaticPool } from "node-worker-threads-pool"
 
-// TODO: Don't serve uncompressed file
+const log_request = process.env.NODE_NAME && process.env.LOG_API_URL && process.env.LOG_API_PASSWORD
+let log_api_token, log_worker_pool
+if (log_request) {
+    // 🗝️ Get API token
+    ({ token: log_api_token } = await (await fetch(process.env.LOG_API_URL + "/api/collections/users/auth-with-password", { headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify({ identity: 'yeetify', password: process.env.LOG_API_PASSWORD }) })).json())
+
+    // 🐜 Create workers pool
+    log_worker_pool = new StaticPool({
+        size: 3,
+        task: async ({ log_api_token, payload }) => {
+            await fetch(process.env.LOG_API_URL + "/api/collections/records/records", {
+                headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json', 'Authorization': log_api_token },
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+        }
+    });
+}
 
 // 🗃️ Load everything in memory
 const cache = new Map()
 await walk("./dist/", async (err, path, file) => {
     if (err) throw err
-
-    if (file.isFile()) {
-        const file_content = await readFile(path)
-        cache.set(path.replace('dist', ''), file_content)
-    }
+    if (file.isFile()) cache.set(path.replace('dist', ''), await readFile(path))
 })
 
 const mime_types = new Map([
@@ -34,7 +48,8 @@ const mime_types = new Map([
     ['.mp4', 'video/mp4'],
     ['.woff2', 'font/woff2'],
     ['.wasm', 'application/wasm'],
-    ['.md', 'text/markdown']
+    ['.md', 'text/markdown'],
+    ['.txt', 'text/plain']
 ])
 
 function handler(request, response) {
@@ -62,11 +77,11 @@ function handler(request, response) {
     // 📦 Serve compressed file if possible
     let encoding = ''
     if (['.html', '.js', '.css'].includes(ext_name)) {
-        if (request_accept_encoding?.includes('br')) {
+        if (request_accept_encoding?.includes('br') && cache.has(file_path + '.br')) {
             encoding = '.br'
             response.setHeader('Content-Encoding', 'br')
         }
-        else if (request_accept_encoding?.includes('gzip')) {
+        else if (request_accept_encoding?.includes('gzip') && cache.has(file_path + '.gz')) {
             encoding = '.gz'
             response.setHeader('Content-Encoding', 'gzip')
         }
@@ -80,14 +95,28 @@ function handler(request, response) {
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
 
     // 🚀 Serve file from cache
+    let resp_code = undefined
     if (cache.has(file_path + encoding)) {
+        resp_code = 200
         response.writeHead(200)
         response.end(cache.get(file_path + encoding), 'utf-8')
     }
     else {
+        resp_code = 404
         response.writeHead(404)
         response.end("", 'utf-8')
     }
+
+    // 📃 Log request
+    if (log_request) log_worker_pool.exec({
+        log_api_token,
+        payload: {
+            service: request.headers.host,
+            client: request.headers['x-forwarded-for'] || '192.168.1.254',
+            request_method: request.method, request_url: request.url, request_agent: request.headers['user-agent'],
+            response_code: resp_code, response_file: file_path + encoding, response_mime: content_type
+        }
+    })
 }
 
 if (process.env.CERT_PATH)
