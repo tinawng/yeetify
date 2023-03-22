@@ -1,8 +1,6 @@
 *
-!.gitignore
 !.env.sample
+!.gitignore
 !app.js
-!app-legacy.js
-!/logs/
-!/logs/README.md
 !package.json
+!README.md
