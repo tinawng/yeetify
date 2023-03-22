@@ -15,7 +15,7 @@ if (log_request) {
 
     // 🐜 Create workers pool
     log_worker_pool = new StaticPool({
-        size: 2,
+        size: Number(process.env.LOG_WORKER_POOL_SIZE) || 1,
         task: async ({ log_api_token, payload }) => {
             await fetch(process.env.LOG_API_URL + "/api/collections/records/records", {
                 headers: { "Referer": process.env.NODE_NAME, 'Content-Type': 'application/json', 'Authorization': log_api_token },
