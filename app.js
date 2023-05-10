@@ -108,7 +108,7 @@ function handler(request, response) {
     }
 
     // 📃 Log request
-    if (log_request) log_worker_pool.exec({
+    if (log_request && !request.headers['user-agent']?.toLowerCase().includes('bot')) log_worker_pool.exec({
         log_api_token,
         payload: {
             service: request.headers.host,
