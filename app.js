@@ -57,7 +57,7 @@ function handler(request, response) {
     // 🔀 Reroute for SPA
     if (process.env.SPA === "true" && content_type === "text/html") file_path = "/index.html"
 
-        // 📦 Serve compressed file if possible
+    // 📦 Serve compressed file if possible
     let encoding = ""
     if ([".html", ".js", ".css"].includes(ext_name)) {
         if (accepted_encodings?.includes("br") && cache.has(file_path + ".br")) {
