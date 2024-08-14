@@ -2,5 +2,8 @@
 !.env.sample
 !.gitignore
 !app.js
+!app-bun.js
 !package.json
+!package-lock.json
+!bun.lockb
 !README.md

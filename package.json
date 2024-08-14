@@ -1,26 +1,21 @@
 {
   "name": "yeetify",
-  "version": "1.13.0",
-  "description": "",
+  "version": "2.0.0",
   "main": "app.js",
   "type": "module",
-  "scripts": {
-    "compress": "find dist/ -type f -name '*.html' -exec gzip -k {} ';' ; find dist/ -type f -name '*.html' -exec brotli --best {} ';' ; find dist/ -type f -name '*.js' -exec gzip -k {} ';' ; find dist/ -type f -name '*.js' -exec brotli --best {} {} ';' ; find dist/ -type f -name '*.css' -exec gzip -k {} ';' ; find dist/ -type f -name '*.css' -exec brotli --best {} {} ';'"
+  "engines": {
+    "node": ">=22"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tinawng/yeetify.git"
   },
-  "keywords": [],
   "author": "Tina Wang",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tinawng/yeetify/issues"
+  "scripts": {
+    "compress": "find dist/ -type f -name '*.html' -exec gzip -k {} ';' ; find dist/ -type f -name '*.html' -exec brotli --best {} ';' ; find dist/ -type f -name '*.js' -exec gzip -k {} ';' ; find dist/ -type f -name '*.js' -exec brotli --best {} {} ';' ; find dist/ -type f -name '*.css' -exec gzip -k {} ';' ; find dist/ -type f -name '*.css' -exec brotli --best {} {} ';'"
   },
-  "homepage": "https://github.com/tinawng/yeetify#readme",
   "dependencies": {
-    "@root/walk": "^1.1.0",
-    "dotenv": "^16.0.3",
-    "node-worker-threads-pool": "^1.5.1"
+    "@root/walk": "1.1.0",
+    "dotenv": "^16.4.5"
   }
 }
